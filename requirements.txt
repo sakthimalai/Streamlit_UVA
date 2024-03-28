@@ -9,3 +9,5 @@ google.generativeai
 pandas
 plotly.express
 matplotlib
+reportlab
+pickle

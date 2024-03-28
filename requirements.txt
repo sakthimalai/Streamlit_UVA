@@ -10,4 +10,4 @@ pandas
 plotly.express
 matplotlib
 reportlab==4.1.0
-pickle==4.0.0
+pickle==4.0

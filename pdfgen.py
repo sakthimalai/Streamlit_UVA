@@ -93,4 +93,5 @@ def generate_pdf_report(selected_symptoms, predicted_disease_rf):
 
     # Save the PDF
     c.save()
+    st.download_button(label="Download PDF", data=open(filename, 'rb').read(), file_name=filename)
     return filename

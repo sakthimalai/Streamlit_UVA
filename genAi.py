@@ -1,5 +1,4 @@
 import streamlit as st
-import textwrap
 import google.generativeai as genai
 
 genai.configure(api_key='AIzaSyDPDemtvtVtmXj9BKcljiSm-l8fFbGjHOA')
@@ -15,7 +14,7 @@ def genai_section():
         if prompt:
             animal_prompt = f"{prompt} give relating to agriculture "
             optresponse = generate_content(animal_prompt)
-            st.markdown(to_markdown(optresponse))
+            st.markdown(optresponse)
         else:
             st.warning('Please enter a prompt.')
             
@@ -28,6 +27,3 @@ def generate_content(prompt):
         return f"Error generating content: {e}"
     
     
-def to_markdown(text):
-    markdown_text = textwrap.dedent(text).strip()
-    return markdown_text

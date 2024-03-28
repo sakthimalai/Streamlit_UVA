@@ -2,7 +2,9 @@ google-api-python-client
 folium
 streamlit_folium
 pymongo
-streamlit_option_menu
+streamlit_option_menu== 0.3.12
+streamlit-geolocation        
+streamlit-location  
 textwrap
 google.generativeai
 pandas

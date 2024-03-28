@@ -8,3 +8,4 @@ streamlit-location==0.0.2
 google.generativeai
 pandas
 plotly.express
+matplotlib

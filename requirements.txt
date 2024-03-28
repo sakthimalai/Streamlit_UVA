@@ -1,0 +1,9 @@
+google-api-python-client
+folium
+streamlit_folium
+pymongo
+streamlit_option_menu
+textwrap
+google.generativeai
+pandas
+plotly.express

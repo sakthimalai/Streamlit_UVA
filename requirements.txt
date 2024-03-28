@@ -5,7 +5,6 @@ pymongo
 streamlit_option_menu== 0.3.12
 streamlit-geolocation        
 streamlit-location==0.0.2
-textwrap
 google.generativeai
 pandas
 plotly.express

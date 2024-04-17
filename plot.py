@@ -8,7 +8,7 @@ URI = "mongodb+srv://unisysveterinaryassistant:VAYbcqWTXJoWPBIn@cluster0.bni0uww
 DB_NAME = "Animaldisease"
 COLLECTION_NAME = "Animaldetails"
 
-# Connect to MongoDB
+# Connect to MongoDB 
 # client = pymongo.MongoClient(URI)
 # db = client[DB_NAME]
 # collection = db[COLLECTION_NAME]

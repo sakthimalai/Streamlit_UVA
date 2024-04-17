@@ -9,11 +9,16 @@ DB_NAME = "Animaldisease"
 COLLECTION_NAME = "Animaldetails"
 
 # Connect to MongoDB
-client = pymongo.MongoClient(URI)
-db = client[DB_NAME]
-collection = db[COLLECTION_NAME]
-
+# client = pymongo.MongoClient(URI)
+# db = client[DB_NAME]
+# collection = db[COLLECTION_NAME]
+def connect():
+    client = pymongo.MongoClient(URI)
+    db = client[DB_NAME]
+    global collection
+    collection = db[COLLECTION_NAME]
 # Retrieve data from MongoDB
+connect()
 data = collection.find()
 
 # Convert data to DataFrame

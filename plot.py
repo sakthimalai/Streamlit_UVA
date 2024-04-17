@@ -8,7 +8,7 @@ URI = "mongodb+srv://unisysveterinaryassistant:VAYbcqWTXJoWPBIn@cluster0.bni0uww
 DB_NAME = "Animaldisease"
 COLLECTION_NAME = "Animaldetails"
 
-# Connect to MongoDB 
+# Connect to MongoDB
 # client = pymongo.MongoClient(URI)
 # db = client[DB_NAME]
 # collection = db[COLLECTION_NAME]
@@ -17,21 +17,22 @@ def connect():
     db = client[DB_NAME]
     global collection
     collection = db[COLLECTION_NAME]
-# Retrieve data from MongoDB
-connect()
-data = collection.find()
+    # Retrieve data from MongoDB
+    data = collection.find()
+    global df
+    # Convert data to DataFrame
+    df = pd.DataFrame(list(data))
 
-# Convert data to DataFrame
-df = pd.DataFrame(list(data))
+    # Convert ObjectId to string for _id field
+    df['_id'] = df['_id'].astype(str)
 
-# Convert ObjectId to string for _id field
-df['_id'] = df['_id'].astype(str)
-
-# Convert date field to datetime
-df['date'] = pd.to_datetime(df['date'])
+    # Convert date field to datetime
+    df['date'] = pd.to_datetime(df['date'])
+    
 
 
 def dashboard_section():
+    connect()
     st.markdown("<h1 style='text-align: left; color: #49f222; font-size: 46px; font-weight:600;'>Dashboard</h1>", unsafe_allow_html=True)
     # Create a bar chart for each disease count
     st.subheader('Chart of Disease Counts')

@@ -5,47 +5,9 @@ import requests
 import folium
 from streamlit_folium import folium_static
 
-def get_nearby_venues(latitude, longitude, radius, keyword, place_type):
-    """
-    Get nearby venues from the RapidAPI endpoint.
-    """
-    url = "https://map-places.p.rapidapi.com/nearbysearch/json"
-
-    querystring = {
-        "location": f"{latitude},{longitude}",
-        "radius": radius,
-        "keyword": keyword,
-        "type": place_type
-    }
-
-    headers = {
-	"X-RapidAPI-Key": "a4ec881cf1mshd1e0ae262e075cap196bc3jsna10e5561ae69",
-	"X-RapidAPI-Host": "map-places.p.rapidapi.com"
-}
-
-
-    response = requests.get(url, headers=headers, params=querystring)
-
-    if response.status_code == 200:
-        data = response.json()
-        venues = []
-        for result in data.get("results", [])[:10]:  # Limiting to 10 results
-            venue = {
-                "name": result["name"],
-                "latitude": result["geometry"]["location"]["lat"],
-                "longitude": result["geometry"]["location"]["lng"],
-                "rating": result.get("rating", None),
-                "address": result.get("vicinity", "")
-            }
-            venues.append(venue)
-        return venues
-    else:
-        st.error("Failed to fetch nearby venues.")
-        return []
-
 def locate():
     st.title("Find Nearby Veterinary Clinics")
-    st.write("Recommended to use edge browser")
+    st.write("Recommended to use Edge browser")
 
     # Get user's location
     location = streamlit_geolocation()
@@ -56,7 +18,6 @@ def locate():
 
         if latitude is not None and longitude is not None:
             st.write(f"Your current location: Latitude {latitude}, Longitude {longitude}")
-            
 
             # Fetch nearby places using RapidAPI
             radius = 5000  # meters
@@ -64,8 +25,18 @@ def locate():
             place_type = "veterinary_clinic"
             nearby_places = get_nearby_venues(latitude, longitude, radius, keyword, place_type)
 
+            if not nearby_places:  # Check if the API returned empty results
+                st.warning("No nearby veterinary clinics found.")
+                return
+
             # Create a DataFrame with nearby places
             places_df = pd.DataFrame(nearby_places)
+
+            # Ensure 'name' column exists
+            if "name" not in places_df.columns:
+                st.error("Unexpected API response format. 'name' column missing.")
+                st.write(places_df)  # Print DataFrame for debugging
+                return
 
             # Add dropdown to select clinic
             selected_clinic = st.selectbox("Select a clinic:", places_df["name"])

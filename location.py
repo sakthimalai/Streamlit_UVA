@@ -5,6 +5,46 @@ import requests
 import folium
 from streamlit_folium import folium_static
 
+def get_nearby_venues(latitude, longitude, radius, keyword, place_type):
+    """
+    Get nearby venues from the RapidAPI endpoint.
+    """
+    url = "https://google-map-places.p.rapidapi.com/maps/api/place/nearbysearch/json"
+
+    querystring = {
+        "location": f"{latitude},{longitude}",
+        "radius": radius,
+        "keyword": keyword,
+        "type": place_type
+    }
+
+
+    headers = {
+    'x-rapidapi-key': "fb87524ac1msh25340f913b14344p10f764jsn7c399ee9b066",
+    'x-rapidapi-host': "google-map-places.p.rapidapi.com"
+    
+    }
+    # response =conn.request("GET", "/maps/api/geocode/json?address=1600%20Amphitheatre%2BParkway%2C%20Mountain%20View%2C%20CA&language=en&region=en&result_type=administrative_area_level_1&location_type=APPROXIMATE", headers=headers)
+    response = requests.get(url, headers=headers, params=querystring)
+    print(response)
+    if response.status_code == 200:
+        data = response.json()
+        venues = []
+        for result in data.get("results", [])[:10]:  # Limiting to 5 results
+            venue = {
+                "name": result["name"],
+                "latitude": result["geometry"]["location"]["lat"],
+                "longitude": result["geometry"]["location"]["lng"],
+                "rating": result.get("rating", None),
+                "address": result.get("vicinity", "")
+            }
+            venues.append(venue)
+        #st.write(venues)
+        return venues
+    else:
+        st.error("Failed to fetch nearby venues.")
+        return []
+        
 def locate():
     st.title("Find Nearby Veterinary Clinics")
     st.write("Recommended to use Edge browser")

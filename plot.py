@@ -41,7 +41,7 @@ def dashboard_section():
                     labels={'value': 'Count', 'date': 'Date of affect', 'variable': 'Disease'},
                     color_discrete_map={'lumpy_skin_count': '#85cf58', 'mouth_disease_count': '#548338'})
     st.plotly_chart(fig_bar)
-    st.set_option('deprecation.showPyplotGlobalUse', False) 
+    # st.set_option('deprecation.showPyplotGlobalUse', False) 
 
     # Create a horizontal line chart for disease counts over time
     st.subheader('Horizontal Line Chart of Disease Counts Over Time')

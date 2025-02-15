@@ -17,12 +17,9 @@ def get_nearby_venues(latitude, longitude, radius, keyword, place_type):
         "keyword": keyword,
         "type": place_type
     }
-
-
     headers = {
     'x-rapidapi-key': "fb87524ac1msh25340f913b14344p10f764jsn7c399ee9b066",
     'x-rapidapi-host': "google-map-places.p.rapidapi.com"
-    
     }
     # response =conn.request("GET", "/maps/api/geocode/json?address=1600%20Amphitheatre%2BParkway%2C%20Mountain%20View%2C%20CA&language=en&region=en&result_type=administrative_area_level_1&location_type=APPROXIMATE", headers=headers)
     response = requests.get(url, headers=headers, params=querystring)
@@ -48,14 +45,12 @@ def get_nearby_venues(latitude, longitude, radius, keyword, place_type):
 def locate():
     st.title("Find Nearby Veterinary Clinics")
     st.write("Recommended to use Edge browser")
-
+    # Get user's location
     # Get user's location
     location = streamlit_geolocation()
-
     if location:
         latitude = location.get("latitude")
         longitude = location.get("longitude")
-
         if latitude is not None and longitude is not None:
             st.write(f"Your current location: Latitude {latitude}, Longitude {longitude}")
 
@@ -63,60 +58,64 @@ def locate():
             radius = 5000  # meters
             keyword = "veterinary"
             place_type = "veterinary_clinic"
-            nearby_places = get_nearby_venues(latitude, longitude, radius, keyword, place_type)
 
-            if not nearby_places:  # Check if the API returned empty results
-                st.warning("No nearby veterinary clinics found.")
-                return
+            nearby_places = get_nearby_venues(latitude, longitude, radius, keyword, place_type)
 
             # Create a DataFrame with nearby places
             places_df = pd.DataFrame(nearby_places)
-
-            # Ensure 'name' column exists
-            if "name" not in places_df.columns:
-                st.error("Unexpected API response format. 'name' column missing.")
-                st.write(places_df)  # Print DataFrame for debugging
-                return
+            print(places_df)
 
             # Add dropdown to select clinic
             selected_clinic = st.selectbox("Select a clinic:", places_df["name"])
 
-            if selected_clinic:
-                # Get the location of the selected clinic
-                selected_clinic_location = places_df[places_df["name"] == selected_clinic]
-                selected_clinic_latitude = selected_clinic_location.iloc[0]["latitude"]
-                selected_clinic_longitude = selected_clinic_location.iloc[0]["longitude"]
+            # Get the location of the selected clinic
+            selected_clinic_location = places_df[places_df["name"] == selected_clinic]
+            selected_clinic_latitude = selected_clinic_location.iloc[0]["latitude"]
+            selected_clinic_longitude = selected_clinic_location.iloc[0]["longitude"]
 
-                # Display selected clinic details
-                st.write("Selected Clinic Details:")
-                selected_clinic_details = {
-                    "Name": selected_clinic,
-                    "Rating": selected_clinic_location.iloc[0]["rating"],
-                    "Address": selected_clinic_location.iloc[0]["address"]
-                }
-                st.dataframe(pd.DataFrame(selected_clinic_details, index=[1]))
+            # Display selected clinic details
+            st.write("Selected Clinic Details:")
+            selected_clinic_details = {
+                "Name": selected_clinic,
+                "Rating": selected_clinic_location.iloc[0]["rating"],
+                "Address": selected_clinic_location.iloc[0]["address"]
+            }
+            st.dataframe(pd.DataFrame(selected_clinic_details, index=[1]))
 
-                # Create a Folium map with user's location, and selected clinic
-                map_center = (latitude, longitude)
-                my_map = folium.Map(location=map_center, zoom_start=13)
+            # Create a map with user's location, nearby places, and selected clinic
+            start_location = [latitude, longitude]
+            end_location = [selected_clinic_latitude, selected_clinic_longitude]
 
-                # Add marker for user's location
-                folium.Marker(location=map_center,
-                            popup="Your Location",
-                            icon=folium.Icon(color="green", icon="user")).add_to(my_map)
+            # Create a map centered on the start location
+            m = folium.Map(location=start_location, zoom_start=15)
 
-                # Add marker for selected clinic
-                folium.Marker(location=[selected_clinic_latitude, selected_clinic_longitude],
-                                popup=selected_clinic,
-                                icon=folium.Icon(color="red", icon="star")).add_to(my_map)
+            # Load the custom car icon image
+            # custom_icon = CustomIcon('car_icon.png', icon_size=(32, 32))
 
-                # Add polyline between user's location and selected clinic
-                polyline = folium.PolyLine(locations=[map_center, (selected_clinic_latitude, selected_clinic_longitude)],
-                                        color='blue')
-                my_map.add_child(polyline)
+            # Create a PolyLine to represent the path the car will take
+            path = folium.PolyLine([start_location, end_location], color='red', weight=5, opacity=0.5)
+            path.add_to(m)
 
-                # Display the map
-                folium_static(my_map)
+            # Create a Marker to represent the car
+            car_marker = folium.Marker(location=start_location)
+            car_marker.add_to(m)
+            cm = folium.Marker(location=end_location)
+            cm.add_to(m)
+
+            # Define a function to update the car's position
+            # def update_car_position(car_marker, path):
+            #     car_coords = path.locations
+            #     num_coords = len(car_coords)
+
+            #     for i in range(num_coords):
+            #         car_marker.move_to(car_coords[i])
+            #         time.sleep(0.1)  # Adjust the sleep time to control the animation speed
+
+            # # Animate the car
+            # update_car_position(car_marker, path)
+
+            # Display the map in Streamlit
+            st.components.v1.html(m._repr_html_(), height=500)
 
         else:
             st.write("Unable to retrieve latitude and longitude.")

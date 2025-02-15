@@ -12,7 +12,7 @@ def home():
     st.write("Welcome to the Home page!")
     
     # Add images
-    st.image("image2.jpg", use_column_width=True)
+    st.image("image2.jpg", use_container_width=True)
     
     st.write("Monitor your farm with us!")
     st.write("All in one solution for monitoring your farm")

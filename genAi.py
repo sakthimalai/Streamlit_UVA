@@ -1,7 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 
-genai.configure(api_key='AIzaSyDPDemtvtVtmXj9BKcljiSm-l8fFbGjHOA')
+genai.configure(api_key='AIzaSyAS9ykqcK8zz4gaUCbsTvx9n3ATOkyfhTA')
 model = genai.GenerativeModel('gemini-pro')
 
 def genai_section():
@@ -12,7 +12,7 @@ def genai_section():
     # Add a button to trigger content generation
     if st.button('Generate Content'):
         if prompt:
-            animal_prompt = f"{prompt} give relating to agriculture "
+            animal_prompt = f"{prompt} give relating to cattle farm as you are a veterinarian "
             optresponse = generate_content(animal_prompt)
             st.markdown(optresponse)
         else:

@@ -14,7 +14,7 @@ def retrieve_data(input_date):
     elif len(input_date) == 10:  # If input is a full date
         cursor = collection.find({"date": input_date})
     else:
-        st.warning("Invalid input format. Please provide input in the format 'YYYY', 'YYYY-MM', or 'YYYY-MM-DD'")
+        st.warning("Invalid input format. Please provide input in the format 'YYYY' or 'YYYY-MM''")
         return None
     
     if cursor:
@@ -83,7 +83,7 @@ def plot_monthly_counts(monthly_counts):
 def additional_section():
     st.markdown("<h1 style='text-align: left; color: #49f222; font-size: 46px; font-weight:600;'>Analyse By Time</h1>", unsafe_allow_html=True)
     # Sidebar
-    input_date = st.text_input("Enter a year (YYYY), year-month (YYYY-MM), or full date (YYYY-MM-DD):")
+    input_date = st.text_input("Enter a year (YYYY) or  year-month (YYYY-MM):")
     
     # Retrieve and plot data based on user input
     if st.button("Plot Yearly Counts"):

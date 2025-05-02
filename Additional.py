@@ -3,8 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from datetime import datetime
 from collections import defaultdict
-import plot
-
+from plot import get_collection
 def retrieve_data(input_date):
     collection = get_collection()
     cursor = None

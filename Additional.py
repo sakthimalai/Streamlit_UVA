@@ -6,13 +6,14 @@ from collections import defaultdict
 import plot
 
 def retrieve_data(input_date):
+    collection = get_collection()
     cursor = None
     if len(input_date) == 4:  # If input is a year
-        cursor =plot.collection.find({"date": {"$regex": f"^{input_date}-.{{3}}"}})
+        cursor =collection.find({"date": {"$regex": f"^{input_date}-.{{3}}"}})
     elif len(input_date) == 7:  # If input is a year-month
-        cursor = plot.collection.find({"date": {"$regex": f"^{input_date}-.*"}})
+        cursor = collection.find({"date": {"$regex": f"^{input_date}-.*"}})
     elif len(input_date) == 10:  # If input is a full date
-        cursor = plot.collection.find({"date": input_date})
+        cursor = collection.find({"date": input_date})
     else:
         st.warning("Invalid input format. Please provide input in the format 'YYYY', 'YYYY-MM', or 'YYYY-MM-DD'")
         return None

@@ -8,7 +8,7 @@ import plot
 def retrieve_data(input_date):
     cursor = None
     if len(input_date) == 4:  # If input is a year
-        cursor =plot.collection.find({"date": {"$regex": f"^{input_date}-.{{3}}"}})
+        cursor = plot.collection.find({"date": {"$regex": f"^{input_date}-.{{3}}"}})
     elif len(input_date) == 7:  # If input is a year-month
         cursor = plot.collection.find({"date": {"$regex": f"^{input_date}-.*"}})
     elif len(input_date) == 10:  # If input is a full date
@@ -42,43 +42,44 @@ def plot_yearly_counts(yearly_counts):
     if not yearly_counts:
         st.warning("No data found for the given input")
         return
-    plt.figure(figsize=(10, 6))
-    bars = plt.bar(yearly_counts.keys(), yearly_counts.values(), color='skyblue')
-    plt.title('Total Disease Counts by Year')
-    plt.xlabel('Year')
-    plt.ylabel('Total Count')
-    plt.xticks(list(yearly_counts.keys()))
-    plt.grid(axis='y')
     
-    # Add annotations to each bar
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars = ax.bar(yearly_counts.keys(), yearly_counts.values(), color='skyblue')
+    ax.set_title('Total Disease Counts by Year')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Total Count')
+    ax.set_xticks(list(yearly_counts.keys()))
+    ax.grid(axis='y')
+
     for bar in bars:
         height = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width() / 2, height, f'{height}', ha='center', va='bottom')
+        ax.text(bar.get_x() + bar.get_width() / 2, height, f'{height}', ha='center', va='bottom')
 
-    plt.tight_layout()
-    st.pyplot()
-    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.pyplot(fig)
 
 
 def plot_monthly_counts(monthly_counts):
     if not monthly_counts:
         st.warning("No data found for the given input")
         return
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    plt.figure(figsize=(10, 6))
-    for year in sorted(set(year for year, month in monthly_counts.keys())):
-        monthly_data = [monthly_counts[(year, month)] for month in range(1, 13)]
-        plt.plot(months, monthly_data, label=year)
-    plt.title('Total Disease Counts by Month')
-    plt.xlabel('Month')
-    plt.ylabel('Total Count')
-    plt.legend(title='Year')
-    plt.grid(True)
-    plt.tight_layout()
-    st.pyplot()
-    st.set_option('deprecation.showPyplotGlobalUse', False)
 
-    
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    for year in sorted(set(year for year, month in monthly_counts.keys())):
+        monthly_data = [monthly_counts.get((year, month), 0) for month in range(1, 13)]
+        ax.plot(months, monthly_data, label=year)
+
+    ax.set_title('Total Disease Counts by Month')
+    ax.set_xlabel('Month')
+    ax.set_ylabel('Total Count')
+    ax.legend(title='Year')
+    ax.grid(True)
+
+    st.pyplot(fig)
+
+
 def additional_section():
     st.markdown("<h1 style='text-align: left; color: #49f222; font-size: 46px; font-weight:600;'>Analyse By Time</h1>", unsafe_allow_html=True)
     # Sidebar
@@ -90,5 +91,5 @@ def additional_section():
         plot_yearly_counts(yearly_counts)
     
     if st.button("Plot Monthly Counts"):
-        _,monthly_counts = retrieve_data(input_date)
+        _, monthly_counts = retrieve_data(input_date)
         plot_monthly_counts(monthly_counts)

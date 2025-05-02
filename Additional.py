@@ -7,34 +7,44 @@ import plot
 
 def retrieve_data(input_date):
     cursor = None
-    if len(input_date) == 4:  # If input is a year
-        cursor = plot.collection.find({"date": {"$regex": f"^{input_date}-.{{3}}"}})
-    elif len(input_date) == 7:  # If input is a year-month
-        cursor = plot.collection.find({"date": {"$regex": f"^{input_date}-.*"}})
-    elif len(input_date) == 10:  # If input is a full date
-        cursor = plot.collection.find({"date": input_date})
-    else:
-        st.warning("Invalid input format. Please provide input in the format 'YYYY', 'YYYY-MM', or 'YYYY-MM-DD'")
-        return None
-    
-    if cursor:
-        yearly_counts = defaultdict(int)
-        monthly_counts = defaultdict(int)
-        for document in cursor:
-            date = datetime.strptime(document['date'], "%Y-%m-%d")
-            year = date.year
-            month = date.month
-            lumpy_skin_count = document['lumpy_skin_count']
-            mouth_disease_count = document['mouth_disease_count']
+    try:
+        if len(input_date) == 4:  # If input is a year
+            print(f"Querying year: {input_date}")  # Debugging print
+            cursor = plot.collection.find({"date": {"$regex": f"^{input_date}-.{{3}}"}})
+        elif len(input_date) == 7:  # If input is a year-month
+            print(f"Querying year-month: {input_date}")  # Debugging print
+            cursor = plot.collection.find({"date": {"$regex": f"^{input_date}-.*"}})
+        elif len(input_date) == 10:  # If input is a full date
+            print(f"Querying full date: {input_date}")  # Debugging print
+            cursor = plot.collection.find({"date": input_date})
+        else:
+            st.warning("Invalid input format. Please provide input in the format 'YYYY', 'YYYY-MM', or 'YYYY-MM-DD'")
+            return None
+        
+        if cursor:
+            print(f"Cursor received: {cursor}")  # Debugging print
+            yearly_counts = defaultdict(int)
+            monthly_counts = defaultdict(int)
+            for document in cursor:
+                print(f"Document: {document}")  # Debugging print
+                date = datetime.strptime(document['date'], "%Y-%m-%d")
+                year = date.year
+                month = date.month
+                lumpy_skin_count = document['lumpy_skin_count']
+                mouth_disease_count = document['mouth_disease_count']
 
-            # Aggregate yearly counts
-            yearly_counts[year] += lumpy_skin_count + mouth_disease_count
+                # Aggregate yearly counts
+                yearly_counts[year] += lumpy_skin_count + mouth_disease_count
 
-            # Aggregate monthly counts
-            monthly_counts[(year, month)] += lumpy_skin_count + mouth_disease_count
+                # Aggregate monthly counts
+                monthly_counts[(year, month)] += lumpy_skin_count + mouth_disease_count
 
-        return yearly_counts, monthly_counts
-    else:
+            return yearly_counts, monthly_counts
+        else:
+            print("No cursor returned.")  # Debugging print
+            return None, None
+    except Exception as e:
+        print(f"Error retrieving data: {e}")  # Print out the error if it occurs
         return None, None
 
 

@@ -90,7 +90,7 @@ def generate_pdf_report(selected_symptoms, predicted_disease_rf):
     # Add report from UVA AI at the bottom
     c.setFont("Helvetica", 12)
     report_y_coordinate = border_padding + 20  # Adjusted y-coordinate
-    c.drawString(border_padding, report_y_coordinate, "*report from UVA AI*")
+    c.drawString(border_padding, report_y_coordinate, "*report from AVA AI*")
 
     # Save the PDF
     c.save()

@@ -28,7 +28,7 @@ def generate_pdf_report(selected_symptoms, predicted_disease_rf):
     # Add space above the header
     header_y_coordinate = letter[1] - border_padding - 30
     # Calculate the center position for the header
-    header_text = "UNISYS VETERINARY ASSISTANT"
+    header_text = "AI VETERINARY ASSISTANT"
     header_text_width = c.stringWidth(header_text)
     header_x_coordinate = (letter[0] - header_text_width) / 2
     # Draw the header

@@ -29,7 +29,11 @@ def connect():
     # Convert date field to datetime
     df['date'] = pd.to_datetime(df['date'])
     
-
+def get_collection():
+    client = pymongo.MongoClient(URI)
+    db = client[DB_NAME]
+    collection = db[COLLECTION_NAME]
+    return collection
 
 def dashboard_section():
     connect()

@@ -24,7 +24,7 @@ def main():
     # Define icons for each navigation option
     icons = {
         "Home": "",
-        "UVA's Ai": "",
+        "AVA's Ai": "",
         "Data Visualization": "",
         "Analyze": "",
         "Predictor": "",

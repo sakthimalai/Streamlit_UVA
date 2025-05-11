@@ -37,7 +37,7 @@ def main():
             menu_title="",
             options=[
                 "🏠 ‎ ‎ Home",
-                "💬 ‎ ‎ UVA's Ai",
+                "💬 ‎ ‎ AVA's Ai",
                 "📊 ‎ ‎ Data Visualization",
                 "🔍 ‎ ‎ Analyze",
                 "📈 ‎ ‎ Predictor",

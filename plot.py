@@ -52,8 +52,7 @@ def dashboard_section():
     fig_line_horizontal = px.line(df, x='date', y=['lumpy_skin_count', 'mouth_disease_count'],
                                 title='Trend of Disease Counts Over Time',
                                 labels={'value': 'Count','date':'Date', 'variable': 'Disease'},
-                                color_discrete_map={'lumpy_skin_count': '#85cf58', 'mouth_disease_count': '#19883f'},
-                                orientation='h')
+                                color_discrete_map={'lumpy_skin_count': '#85cf58', 'mouth_disease_count': '#19883f'})
     st.plotly_chart(fig_line_horizontal)
 
     
